@@ -1,23 +1,28 @@
 package ityoung.tech.sort;
 
+import ityoung.tech.util.ArrayUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
+import static ityoung.tech.util.ArrayUtil.getRandomArr;
+
+
 public class BubbleSort {
 
+    private static final Logger logger = LoggerFactory.getLogger(BubbleSort.class);
+
     public static void main(String[] args) {
-        Random random = new Random();
-        int[] arr = new int[80000];
-        for (int i = 0; i < 80000; i++) {
-            int num = random.nextInt(8000000);
-            arr[i] = num;
-        }
+        int[] arr = getRandomArr(80000);
         int temp;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String before = sdf.format(new Date());
         System.out.println("排序前" + before);
+        logger.info("排序前" + before);
         boolean flag = false;
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr.length - i - 1; j++) {
