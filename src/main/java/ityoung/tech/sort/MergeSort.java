@@ -11,12 +11,14 @@ public class MergeSort {
     private static Logger log = LoggerFactory.getLogger(MergeSort.class);
 
     public static void main(String[] args) {
-        int[] arr = ArrayUtil.getRandomArr(8);
+        int[] arr = ArrayUtil.getRandomArr(8000000);
         int[] temp = new int[arr.length];
-        log.info(Arrays.toString(arr));
+//        log.info(Arrays.toString(arr));
+        log.info("排序前");
 //        sort(0, 3, 7, arr, temp);
         merge(arr, 0, arr.length - 1, temp);
-        log.info(Arrays.toString(arr));
+        log.info("排序后");
+//        log.info(Arrays.toString(arr));
     }
 
     public static void merge(int[] arr, int left, int right, int[] temp) {
