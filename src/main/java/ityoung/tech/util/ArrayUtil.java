@@ -11,7 +11,7 @@ public class ArrayUtil {
         Random random = new Random();
         int[] arr = new int[total];
         for (int i = 0; i < total; i++) {
-            int num = random.nextInt(100 * total);
+            int num = random.nextInt(10 * total);
             arr[i] = num;
         }
         return arr;

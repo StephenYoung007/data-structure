@@ -11,28 +11,44 @@ public class RadixSort {
     private static final Logger log = LoggerFactory.getLogger(RadixSort.class);
 
     public static void main(String[] args) {
-        int[] arr = ArrayUtil.getRandomArr(8);
-        log.info(Arrays.toString(arr));
+        int[] arr = ArrayUtil.getRandomArr(80000000);
+//        log.info(Arrays.toString(arr));
+        log.info("排序前......");
         radixSort(arr);
-        log.info(Arrays.toString(arr));
+//        log.info(Arrays.toString(arr));
+        log.info("排序后......");
     }
 
     private static void radixSort(int[] arr) {
+        int max = arr[0];
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+        }
         int[][] bucketArr = new int[10][arr.length];
         int[] countArr = new int[10];
-        for (int i = 0; i < arr.length; i++) {
-            int remainder = arr[i] % 10;
-            bucketArr[remainder][countArr[remainder]] = arr[i];
-            countArr[remainder]++;
-        }
-        log.info(Arrays.toString(countArr));
-        log.info(Arrays.toString(bucketArr));
-        int k = 0;
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < countArr[i]; j++) {
-                arr[k] = bucketArr[i][j];
-                k++;
+        int maxLength = (max + "").length();
+        int currentRound = 0;
+        int n = 1;
+        while (currentRound < maxLength) {
+            for (int i = 0; i < arr.length; i++) {
+                int remainder = arr[i] / n % 10;
+                bucketArr[remainder][countArr[remainder]] = arr[i];
+                countArr[remainder]++;
             }
+//            log.info(Arrays.toString(countArr));
+            int k = 0;
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < countArr[i]; j++) {
+                    arr[k] = bucketArr[i][j];
+                    k++;
+                }
+                countArr[i] = 0;
+            }
+            currentRound++;
+            n *= 10;
+//            log.info(Arrays.toString(arr));
         }
     }
 }
