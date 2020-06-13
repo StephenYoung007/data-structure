@@ -66,6 +66,20 @@ class BinaryTree {
         return null;
     }
 
+    public HeroNode infixOrderSearch(int no) {
+        if (this.root != null) {
+            return root.infixOrderSearch(no);
+        }
+        return null;
+    }
+
+    public HeroNode postOrderSearch(int no) {
+        if (this.root != null) {
+            return root.postOrderSearch(no);
+        }
+        return null;
+    }
+
 
 
 }
@@ -134,6 +148,49 @@ class HeroNode {
         }
         if (this.right != null) {
             node = this.right.preOrderSearch(no);
+        }
+        if (node != null) {
+            return node;
+        }
+        return node;
+    }
+
+    public HeroNode infixOrderSearch(int no) {
+        System.out.println(this);
+        HeroNode node = null;
+        if (this.left != null) {
+            node = this.left.infixOrderSearch(no);
+        }
+        if (node != null) {
+            return node;
+        }
+        if (this.id == no) {
+            return this;
+        }
+        if (this.right != null) {
+            node = this.right.infixOrderSearch(no);
+        }
+        if (node != null) {
+            return node;
+        }
+        return node;
+    }
+
+
+    public HeroNode postOrderSearch(int no) {
+        System.out.println(this);
+        HeroNode node = null;
+        if (this.left != null) {
+            node = this.left.postOrderSearch(no);
+        }
+        if (node != null) {
+            return node;
+        }
+        if (this.id == no) {
+            return this;
+        }
+        if (this.right != null) {
+            node = this.right.postOrderSearch(no);
         }
         if (node != null) {
             return node;
