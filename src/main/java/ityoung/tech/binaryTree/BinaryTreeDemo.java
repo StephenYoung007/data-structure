@@ -80,6 +80,20 @@ class BinaryTree {
         return null;
     }
 
+    public boolean delete(int no) {
+        boolean flag = false;
+        if (this.root != null) {
+            if (this.root.getId() == no) {
+                this.root = null;
+                flag = true;
+            } else {
+                flag = this.root.delete(no);
+            }
+        }
+
+        return flag;
+    }
+
 
 
 }
@@ -196,5 +210,30 @@ class HeroNode {
             return node;
         }
         return node;
+    }
+
+    public boolean delete(int no) {
+        boolean flag = false;
+        if (this.left != null) {
+            if (this.left.getId() == no) {
+                this.left = null;
+                flag = true;
+            } else {
+                flag = this.left.delete(no);
+            }
+        }
+        if (flag == true) {
+            return flag;
+        }
+        if (this.right != null) {
+            if (this.right.getId() == no) {
+                this.right = null;
+                flag = true;
+            } else {
+                flag = this.right.delete(no);
+            }
+        }
+
+        return flag;
     }
 }
