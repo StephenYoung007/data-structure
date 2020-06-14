@@ -28,6 +28,9 @@ public class BinaryTreeDemo {
         System.out.println("======================");
         HeroNode orderSearch = tree.preOrderSearch(5);
         System.out.println(orderSearch);
+        boolean delete = tree.delete(6);
+        String msg = delete == true ? "节点删除成功" : "节点删除失败，查无此节点";
+        System.out.println(msg);
     }
 }
 
