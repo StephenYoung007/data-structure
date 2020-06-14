@@ -1,4 +1,4 @@
-package ityoung.tech.binaryTree;
+package ityoung.tech.tree.binarytree;
 
 
 import lombok.Data;
