@@ -25,15 +25,53 @@ public class ThreadedBinaryTreeDemo {
         System.out.println("======================");
         HeroNode orderSearch = tree.preOrderSearch(5);
         System.out.println(orderSearch);
-        boolean delete = tree.delete(6);
-        String msg = delete == true ? "节点删除成功" : "节点删除失败，查无此节点";
-        System.out.println(msg);
+//        boolean delete = tree.delete(6);
+//        String msg = delete == true ? "节点删除成功" : "节点删除失败，查无此节点";
+//        System.out.println(msg);
+        tree.threadedTreeNode(tree.getRoot());
+        System.out.println("test");
+        tree.threadedList();
     }
 }
 
 @Data
 class ThreadedBinaryTree {
     private HeroNode root;
+
+    private HeroNode pre;
+
+    public void threadedList() {
+        HeroNode node = root;
+        while (node != null) {
+            while (node.getLeftType() == 0) {
+                node = node.getLeft();
+            }
+            System.out.println(node);
+            while (node.getRightType() == 1) {
+                node = node.getRight();
+                System.out.println(node);
+            }
+            node = node.getRight();
+        }
+    }
+
+    public void threadedTreeNode(HeroNode node) {
+        if (node == null) {
+            return;
+        }
+        threadedTreeNode(node.getLeft());
+        if (node.getLeft() == null) {
+            node.setLeft(pre);
+            node.setLeftType(1);
+        }
+        if (pre != null && pre.getRight() == null) {
+            pre.setRight(node);
+            pre.setRightType(1);
+        }
+        pre = node;
+        threadedTreeNode(node.getRight());
+
+    }
 
     public void preOrder() {
         if (this.root != null) {
@@ -105,11 +143,17 @@ class HeroNode {
     private HeroNode left;
     private HeroNode right;
 
+    //0表示左右节点指针指向左右子节点，1表示左右指针指向前驱节点/后继节点
+    private int leftType;
+    private int rightType;
+
     @Override
     public String toString() {
         return "HeroNode{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", leftType=" + leftType +
+                ", rightType=" + rightType +
                 '}';
     }
 

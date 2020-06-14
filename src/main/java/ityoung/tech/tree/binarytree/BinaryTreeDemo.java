@@ -108,6 +108,13 @@ class HeroNode {
     private HeroNode left;
     private HeroNode right;
 
+    /**
+     * 0表示指向左右子数
+     * 1表示指向前驱后继节点
+     */
+    private int leftType;
+    private int rightType;
+
     @Override
     public String toString() {
         return "HeroNode{" +
