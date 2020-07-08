@@ -1,6 +1,5 @@
-package ityoung.tech.tree.huffman;
+package ityoung.tech.tree.huffman.huffmantree;
 
-import ityoung.tech.util.ArrayUtil;
 import lombok.Data;
 
 import java.util.ArrayList;
