@@ -7,13 +7,41 @@ import java.util.*;
 public class HuffmanCode {
 
     public static void main(String[] args) {
+        int i = (byte)Integer.parseInt("10101000", 2);
+        int j = (byte) 168;
+        System.out.println(i);
         String content = "i like like like java do you like a java";
         byte[] contentBytes = content.getBytes();
         List<Node> nodes = getNodes(contentBytes);
         Collections.sort(nodes);
         Node huffmanTree = createHuffmanTree(nodes);
         huffmanTree.preOrder();
+        getCodesMap(huffmanTree, "", stringBuilder);
+        System.out.println(huffmanCodeMap);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte contentByte : contentBytes) {
+            stringBuilder.append(huffmanCodeMap.get(contentByte));
+        }
+        System.out.println(stringBuilder.toString().length());
 
+    }
+
+    static Map<Byte, String> huffmanCodeMap = new HashMap<>();
+    static StringBuilder stringBuilder = new StringBuilder();
+
+
+    public static void getCodesMap(Node node, String code, StringBuilder stringBuilder) {
+//        stringBuilder.append(code);
+        StringBuilder stringBuilder2 = new StringBuilder(stringBuilder);
+        stringBuilder2.append(code);
+        if (node != null) {
+            if (node.getData() == null) {
+                getCodesMap(node.getLeft(), "0", stringBuilder2);
+                getCodesMap(node.getRight(), "1", stringBuilder2);
+            } else {
+                huffmanCodeMap.put(node.getData(), stringBuilder2.toString());
+            }
+        }
     }
 
     public static Node createHuffmanTree(List<Node> nodes) {
