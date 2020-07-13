@@ -3,16 +3,51 @@ package ityoung.tech.tree.huffman.huffmancode;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.*;
 import java.util.*;
 
 @Slf4j
 public class HuffmanCode {
 
     public static void main(String[] args) {
-        String content = "i like like like java do you like a java? fuck you";
+/*        String content = "i like like like java do you like a java? fuck you";
+        log.info(content);
         byte[] contentBytes = content.getBytes();
         byte[] zip = huffmanZip(contentBytes);
         log.info(Arrays.toString(zip));
+        byte[] bytes = huffmanUnzip(zip);
+        log.info(new String(bytes));*/
+        String originFilePath = "d://src.bmp";
+        String zippedFilePath = "d://src.zip";
+        String unzippedFilePath = "d://unzipped.bmp";
+//        zipFile(originFilePath, zippedFilePath);
+        unzipFile(zippedFilePath, unzippedFilePath);
+    }
+
+    public static void zipFile(String srcFile, String desFile) {
+        try(InputStream is = new FileInputStream(srcFile); OutputStream fos = new FileOutputStream(desFile); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            byte[] b = new byte[is.available()];
+            is.read(b);
+            byte[] oriBytes = huffmanZip(b);
+            oos.writeObject(oriBytes);
+            oos.writeObject(huffmanCodeMap);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+    }
+
+    public static void unzipFile(String zippedFile, String unzippedFile) {
+        try(InputStream is = new FileInputStream(zippedFile); ObjectInputStream ois = new ObjectInputStream(is); OutputStream fos = new FileOutputStream(unzippedFile)) {
+            byte[] huffmanBytes = (byte[]) ois.readObject();
+            Map<Byte, String> huffmanCodeMap = (Map<Byte, String>) ois.readObject();
+            byte[] bytes = huffmanUnzip(huffmanBytes, huffmanCodeMap);
+            fos.write(bytes);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+    }
+
+    public static byte[] huffmanUnzip(byte[] zip, Map<Byte, String> huffmanCodeMap) {
         StringBuilder bitStringBuilder = new StringBuilder();
         int count = 0;
         for (byte b : zip) {
@@ -25,26 +60,30 @@ public class HuffmanCode {
             bitStringBuilder.append(bitString);
             count++;
         }
-        log.info(bitStringBuilder.toString());
-        String s = fromBitStringToContent(bitStringBuilder.toString());
-        log.info(s);
+//        log.info(bitStringBuilder.toString());
+        byte[] bytes = fromBitStringToContent(bitStringBuilder.toString(), huffmanCodeMap);
+        return bytes;
     }
 
-    public static String fromBitStringToContent(String bitString) {
+    public static byte[] fromBitStringToContent(String bitString, Map<Byte, String> huffmanCodeMap) {
         Map<String, Byte> huffmanUnzipMap = new HashMap<>();
         for (Map.Entry<Byte, String> entry : huffmanCodeMap.entrySet()) {
             huffmanUnzipMap.put(entry.getValue(), entry.getKey());
         }
-        StringBuilder origin = new StringBuilder();
+        List<Byte> byteList = new ArrayList<>();
         int codeLength = 0;
         for (int i = 0; i < bitString.length(); i += codeLength) {
             codeLength = 1;
             while (huffmanUnzipMap.get(bitString.substring(i, i + codeLength)) == null) {
                 codeLength++;
             }
-            origin.append((char)(int)huffmanUnzipMap.get(bitString.substring(i, i + codeLength)));
+            byteList.add(huffmanUnzipMap.get(bitString.substring(i, i + codeLength)));
         }
-        return origin.toString();
+        byte[] bytes = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            bytes[i] = byteList.get(i);
+        }
+        return bytes;
     }
 
     public static String byteToBitString(byte b, boolean flag) {
@@ -60,21 +99,25 @@ public class HuffmanCode {
     }
 
     public static byte[] huffmanZip(byte[] contentBytes) {
+        // 获取统计权重的字节节点列表
         List<Node> nodes = getNodes(contentBytes);
+        // 根据权重排序
         Collections.sort(nodes);
+        // 获取huffmanTree
         Node huffmanTree = createHuffmanTree(nodes);
-//        huffmanTree.preOrder();
+        // 根据huffmanTree获取节点编码映射表
         getCodesMap(huffmanTree, "", stringBuilder);
+        // 根据映射表压缩原字节数组获取压缩后的字节数组
         byte[] zip = zip(contentBytes, huffmanCodeMap);
         return zip;
     }
 
     public static byte[] zip(byte[] bytes, Map huffmanCodeMap) {
+        // 构件stringbuilder用于拼接路径
         StringBuilder stringBuilder = new StringBuilder();
         for (byte contentByte : bytes) {
             stringBuilder.append(huffmanCodeMap.get(contentByte));
         }
-        log.info(stringBuilder.toString());
         int length;
         if (stringBuilder.length() % 8 == 0) {
             length = stringBuilder.length() / 8;
@@ -125,6 +168,11 @@ public class HuffmanCode {
         return node;
     }
 
+    /**
+     * 根据统计获取字节频率列表
+     * @param bytes
+     * @return
+     */
     private static List<Node> getNodes(byte[] bytes) {
         List<Node> nodes = new ArrayList<>();
         Map<Byte, Integer> counts = new HashMap<>();
@@ -144,6 +192,7 @@ public class HuffmanCode {
 
     }
 }
+
 
 @Data
 class Node implements Comparable<Node> {
