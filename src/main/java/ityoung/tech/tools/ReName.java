@@ -1,7 +1,5 @@
 package ityoung.tech.tools;
 
-import jdk.swing.interop.SwingInterOpUtils;
-
 import java.io.File;
 
 public class ReName {
